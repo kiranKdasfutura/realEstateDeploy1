@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const app = express();
-
+//hello
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
