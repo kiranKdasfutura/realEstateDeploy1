@@ -8,7 +8,7 @@ dotenv.config()
 
 const app = express();
 app.use(express.json())
-
+//MONGO_URL=mongodb+srv://kirankdas:kirankdas@mern-estate.gjmavtq.mongodb.net/?retryWrites=true&w=majority
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
