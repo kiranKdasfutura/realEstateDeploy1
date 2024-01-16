@@ -48,6 +48,7 @@ const SignUp = () => {
           id="username"
           className="border p-3 rounded-lg "
           onChange={handleChange}
+          required
         />
         <input
           type="email"
@@ -55,6 +56,7 @@ const SignUp = () => {
           id="email"
           className="border p-3 rounded-lg "
           onChange={handleChange}
+          required
         />
         <input
           type="password"
@@ -62,6 +64,7 @@ const SignUp = () => {
           id="password"
           className="border p-3 rounded-lg "
           onChange={handleChange}
+          required
         />
         <button
           disabled={loading}
@@ -71,7 +74,7 @@ const SignUp = () => {
         </button>
       </form>
       <div className="flex gap-2 mt-5">
-        <p>Have a account ?</p>
+        <p>Have an account ?</p>
         <Link to={"/sign-in"}>
           <span className="text-blue-700">Sign in</span>
         </Link>
