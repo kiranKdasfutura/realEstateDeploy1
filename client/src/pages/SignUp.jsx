@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../server/axios/requestMethods";
+
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  //rudux methods
+  const dispatch = useDispatch();
   //handling changes of input field by a common handler
   const handleChange = (e) => {
     setFormData({
@@ -20,18 +23,18 @@ const SignUp = () => {
     setLoading(true)
     try {
       const res = await axiosInstance.post("/auth/signup", formData);
-      console.log("full response:",res);
+      console.log("full response:", res);
       setLoading(false)
       setError(null)
       navigate("/sign-in");
     } catch (error) {
-      console.log("full error ",error);
+      console.log("full error ", error);
       console.log("unique schema manual error  ", error.response.data);
       if (error.response.data.success === false) {
          setLoading(false);
          setError(error.response.data.message);
-         return;
-       }
+        return;
+      }
       setError(error.message)
       setLoading(false)
       console.log(error);

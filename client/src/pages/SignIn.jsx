@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../server/axios/requestMethods";
+// import {} from '@reduxjs/toolkit'
+import {useDispatch,useSelector} from 'react-redux'
+import { signInFailure,signInStart,signinSuccess } from "../redux/user/userSlice";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch=useDispatch()
+  const {loading,error}=useSelector((state)=>state.user)
   //handling changes of input field by a common handler
   const handleChange = (e) => {
     setFormData({
@@ -17,23 +22,27 @@ const SignIn = () => {
   //submiting form data to backend
   const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    // setLoading(true);
+    dispatch(signInStart())
     try {
       const res = await axiosInstance.post("/auth/signin", formData);
       console.log("full response:", res);
-      setLoading(false);
-      setError(null);
+      dispatch(signinSuccess(res.data))
+      // setLoading(false);
+      // setError(null);
       navigate("/");
     } catch (error) {
       console.log("full error ", error);
       console.log("unique schema manual error  ", error.response.data);
       if (error.response.data.success === false) {
-        setLoading(false);
-        setError(error.response.data.message);
+        dispatch(signInFailure(error.response.data.message));
+        // setLoading(false);
+        // setError(error.response.data.message);
         return;
       }
-      setError(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
+      // setError(error.message);
+      // setLoading(false);
       console.log(error);
     }
   };
