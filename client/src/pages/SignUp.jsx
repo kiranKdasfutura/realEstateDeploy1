@@ -9,7 +9,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
   //rudux methods
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   //handling changes of input field by a common handler
   const handleChange = (e) => {
     setFormData({
