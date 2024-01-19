@@ -4,6 +4,7 @@ import { axiosInstance } from "../../../server/axios/requestMethods";
 // import {} from '@reduxjs/toolkit'
 import {useDispatch,useSelector} from 'react-redux'
 import { signInFailure,signInStart,signinSuccess } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
@@ -73,6 +74,7 @@ const SignIn = () => {
         >
           {loading ? "Loading..." : " sign in"}
         </button>
+        <OAuth/>
       </form>
       <div className="flex gap-2 mt-5"> doesnt
         <p>Dont have a account ?</p>
