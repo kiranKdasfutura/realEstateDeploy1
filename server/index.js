@@ -15,10 +15,11 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE"], // DELETE method is included
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 //MONGO_URL=mongodb+srv://kirankdas:kirankdas@mern-estate.gjmavtq.mongodb.net/?retryWrites=true&w=majority

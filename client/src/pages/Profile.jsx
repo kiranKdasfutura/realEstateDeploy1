@@ -9,6 +9,9 @@ import {
 import { app } from "../firebase.js";
 import { axiosInstance } from "../axios/requestMethods.js";
 import {
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -89,6 +92,22 @@ const Profile = () => {
       console.log(error);
     }
   };
+  //delete User
+const handleDelete = async () => {
+  try {
+    dispatch(deleteUserStart())
+    const res = await axiosInstance.delete(`/user/delete/${currentUser._id}`);
+    dispatch(deleteUserSuccess(res.data))
+  } catch (error) {
+     if (error.response.data.success === false) {
+       dispatch(deleteUserFailure(error.response.data.message));
+       return;
+     }
+     dispatch(deleteUserFailure(error.message));
+     console.log(error);
+  }
+};
+
 
   return (
     <>
@@ -155,7 +174,7 @@ const Profile = () => {
           </button>
         </form>
         <div className="flex justify-between mt-5">
-          <span className="text-red-700 cursor-pointer">Delete accound</span>
+          <span className="text-red-700 cursor-pointer" onClick={handleDelete}>Delete accound</span>
           <span className="text-red-700 cursor-pointer">Sign out</span>
         </div>
 
