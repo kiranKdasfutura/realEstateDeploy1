@@ -1,15 +1,26 @@
 import express from "express";
 import mongoose from "mongoose";
-import dotenv from 'dotenv'
-import cors from 'cors'
+import dotenv from "dotenv";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 //Routes
-import userRouter from './routes/user.route.js'
-import authRouter from './routes/auth.route.js'
-dotenv.config()
+import userRouter from "./routes/user.route.js";
+import authRouter from "./routes/auth.route.js";
+dotenv.config();
 
 const app = express();
-app.use(express.json())
-app.use(cors())
+// Specify the allowed origin
+// Specify the allowed HTTP methods
+// Allow cookies and HTTP authentication to be sent
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+app.use(express.json());
+app.use(cookieParser());
 //MONGO_URL=mongodb+srv://kirankdas:kirankdas@mern-estate.gjmavtq.mongodb.net/?retryWrites=true&w=majority
 mongoose
   .connect(process.env.MONGO_URL)
@@ -23,16 +34,16 @@ app.listen(3000, () => {
   console.log("server running on port 3000");
 });
 app.use("/api/user", userRouter);
-app.use('/api/auth',authRouter)
+app.use("/api/auth", authRouter);
 
 //error handle middleware
-app.use((err,req,res,next)=>{
-  const statusCode=err.statusCode||500
-  const message=err.message || "Internal Server error"
-  return res.status(statusCode).json({
-    success:false,
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  console.error(err.stack); // Log the error stack for debugging purposes
+  res.status(statusCode).json({
+    success: false,
     statusCode,
-    message
-    
-  })
-})
+    message,
+  });
+});

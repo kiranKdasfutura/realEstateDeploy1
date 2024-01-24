@@ -1,13 +1,13 @@
 import React from "react";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { app } from "../firebase";
-import { axiosInstance } from "../../../server/axios/requestMethods";
+import { axiosInstance } from "../axios/requestMethods";
 import { useDispatch } from "react-redux";
 import { signinSuccess } from "../redux/user/userSlice";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 const OAuth = () => {
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const handleGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -25,11 +25,10 @@ const OAuth = () => {
         displayName: result.user.displayName,
         photoURL: result.user.photoURL,
       });
-      console.log("response google full",res);
-      console.log("data",res.data);
-
+      console.log("response google full", res);
+      console.log("data", res.data);
       dispatch(signinSuccess(res.data));
-      navigate('/')
+      navigate("/");
     } catch (error) {
       console.log("error in Google authentication", error);
     }
