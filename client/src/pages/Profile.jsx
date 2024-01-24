@@ -12,6 +12,9 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutUserFailure,
+  signOutUserStart,
+  signOutUserSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -93,22 +96,35 @@ const Profile = () => {
     }
   };
   //delete User
-const handleDelete = async () => {
-  try {
-    dispatch(deleteUserStart())
-    const res = await axiosInstance.delete(`/user/delete/${currentUser._id}`);
-    dispatch(deleteUserSuccess(res.data))
-  } catch (error) {
-     if (error.response.data.success === false) {
-       dispatch(deleteUserFailure(error.response.data.message));
-       return;
-     }
-     dispatch(deleteUserFailure(error.message));
-     console.log(error);
-  }
-};
+  const handleDelete = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await axiosInstance.delete(`/user/delete/${currentUser._id}`);
+      dispatch(deleteUserSuccess(res.data));
+    } catch (error) {
+      if (error.response.data.success === false) {
+        dispatch(deleteUserFailure(error.response.data.message));
+        return;
+      }
+      dispatch(deleteUserFailure(error.message));
+      console.log(error);
+    }
+  };
 
-
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart())
+     const res= await axiosInstance.get("/auth/signout");
+      dispatch(signOutUserSuccess(res.data))
+    } catch (error) {
+       if (error.response.data.success === false) {
+         dispatch(signOutUserFailure(error.response.data.message));
+         return;
+       }
+       dispatch(signOutUserFailure(error.message));
+       console.log(error);
+    }
+  };
   return (
     <>
       <div className="p-3 max-w-lg mx-auto">
@@ -174,8 +190,12 @@ const handleDelete = async () => {
           </button>
         </form>
         <div className="flex justify-between mt-5">
-          <span className="text-red-700 cursor-pointer" onClick={handleDelete}>Delete accound</span>
-          <span className="text-red-700 cursor-pointer">Sign out</span>
+          <span className="text-red-700 cursor-pointer" onClick={handleDelete}>
+            Delete accound
+          </span>
+          <span className="text-red-700 cursor-pointer" onClick={handleSignOut}>
+            Sign out
+          </span>
         </div>
 
         {error ? (
