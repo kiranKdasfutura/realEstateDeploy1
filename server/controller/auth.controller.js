@@ -100,7 +100,7 @@ export const google = async (req, res, next) => {
   }
 };
 //signout user
-export const signOut=async(req,res)=>{
+export const signOut=async(req,res,next)=>{
   console.log("signout called");
   try {
     res.clearCookie('access_token');
