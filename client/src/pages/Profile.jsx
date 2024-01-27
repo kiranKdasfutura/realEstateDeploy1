@@ -19,7 +19,7 @@ import {
   updateUserStart,
   updateUserSuccess,
 } from "../redux/user/userSlice.js";
-
+import { Link } from "react-router-dom";
 const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
@@ -113,16 +113,16 @@ const Profile = () => {
 
   const handleSignOut = async () => {
     try {
-      dispatch(signOutUserStart())
-     const res= await axiosInstance.get("/auth/signout");
-      dispatch(signOutUserSuccess(res.data))
+      dispatch(signOutUserStart());
+      const res = await axiosInstance.get("/auth/signout");
+      dispatch(signOutUserSuccess(res.data));
     } catch (error) {
-       if (error.response.data.success === false) {
-         dispatch(signOutUserFailure(error.response.data.message));
-         return;
-       }
-       dispatch(signOutUserFailure(error.message));
-       console.log(error);
+      if (error.response.data.success === false) {
+        dispatch(signOutUserFailure(error.response.data.message));
+        return;
+      }
+      dispatch(signOutUserFailure(error.message));
+      console.log(error);
     }
   };
   return (
@@ -188,6 +188,12 @@ const Profile = () => {
           >
             {loading ? "Loading.." : "Update"}
           </button>
+          <Link
+            to={"/create-listing"}
+            className="p-3 bg-green-600 rounded-lg text-white font-semibold uppercase text-center hover:opacity-95"
+          >
+            Create Listing
+          </Link>
         </form>
         <div className="flex justify-between mt-5">
           <span className="text-red-700 cursor-pointer" onClick={handleDelete}>
@@ -197,7 +203,6 @@ const Profile = () => {
             Sign out
           </span>
         </div>
-
         {error ? (
           <p className="text-red-400 font-semibold mt-5">{error} </p>
         ) : (
