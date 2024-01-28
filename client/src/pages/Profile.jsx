@@ -142,6 +142,19 @@ const Profile = () => {
       setListingError(true)
     }
   }
+  const handleListingDelete=async(listingId)=>{
+
+    try {
+      const res=await axiosInstance.delete(`/listing/delete/${listingId}`)
+      setUserListings((prev)=>prev.filter((listing)=>listing._id !==listingId));
+    } catch (error) {
+      if (error.response.data.success === false) {
+        console.log(error.response.data.message);
+        return;
+      }
+      console.log(error);
+    }
+  }
   return (
     <>
       <div className="p-3 max-w-lg mx-auto">
@@ -264,12 +277,12 @@ const Profile = () => {
               <p className="">{listing.name} </p>
             </Link>
             <div className="flex flex-col items-center">
-              <button className="text-red-700 uppercase">delete</button>
+              <button onClick={()=>handleListingDelete(listing._id)} className="text-red-700 uppercase">delete</button>
               <button className="text-green-700 uppercase">edit</button>
             </div>
           </div>
         ))}
-        </div> }
+        </div> }   
     </>
   );
 };
