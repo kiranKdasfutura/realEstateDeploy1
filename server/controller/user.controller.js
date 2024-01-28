@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import { errorHandler } from "../utils/error.js";
+import Listing from "../models/listing.models.js";
 
 //update user
 export const updateUser = async (req, res, next) => {
@@ -51,4 +52,16 @@ try {
 } catch (error) {
   next(error);
 }
+}
+export const getUserListings=async(req,res,next)=>{
+  if(req.user.id==req.params.id){
+   try {
+     const listings = await Listing.find({ userRef: req.params.id });
+    res.status(202).json(listings)
+   } catch (error) {
+    next(error)
+   }
+  }else{
+ return  next(errorHandler(401,"you can only view your listings"))
+  }
 }
