@@ -42,8 +42,8 @@ export const singnIn = async (req, res, next) => {
     const expirationTime = 60 * 60 * 1000; // 1 hour in milliseconds
     res
       .cookie("access_token", token, {
-        httpOnly: true,
-        expires: new Date(Date.now() + expirationTime),
+        httpOnly: true
+        
       })
       .status(200)
       .json(rest);
@@ -91,7 +91,7 @@ export const google = async (req, res, next) => {
       const { password: userPassword, ...rest } = newUser._doc;
       const expirationTime = 60 * 60 * 1000;
 
-      res.cookie("access_token", token, {httpOnly: true,expires: new Date(Date.now() + expirationTime),})
+      res.cookie("access_token", token, {httpOnly: true})
         .status(200)
         .json(rest);
     }

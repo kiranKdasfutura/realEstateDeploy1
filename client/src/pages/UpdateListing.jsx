@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -7,9 +8,9 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { axiosInstance } from "../axios/requestMethods.js";
-export default function CreateListing() {
+export default function UpdateListing() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
@@ -31,7 +32,16 @@ export default function CreateListing() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(formData);
+  const params=useParams()
+  useEffect(() => {
+ const fetchListings=async()=>{
+    const listing=await axiosInstance.get(`/listing/get/${params.listId}`)
+    // console.log("get list",listing.data);
+    setFormData(listing.data)
+ }
+ fetchListings()
+  }, [])
+  
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
@@ -132,16 +142,16 @@ export default function CreateListing() {
         return setError("Discount price must be lower than regular price");
       setLoading(true);
       setError(false);
-      const res = await axiosInstance.post("/listing/create",{
+      const res = await axiosInstance.post(`/listing/update/${params.listId}`, {
         ...formData,
-        userRef: currentUser._id
+        userRef: currentUser._id,
       });
       setLoading(false);
       navigate(`/listing/${res.data._id}`);
     } catch (error) {
       if (error.response.data.success === false) {
         setError(error.response.data.message);
-      setLoading(false);
+        setLoading(false);
         return;
       }
       setError(error.message);
@@ -151,7 +161,7 @@ export default function CreateListing() {
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
-        Create a Listing
+        Update a Listing
       </h1>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
         <div className="flex flex-col gap-4 flex-1">
@@ -355,7 +365,7 @@ export default function CreateListing() {
             disabled={loading || uploading}
             className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
           >
-            {loading ? "Creating..." : "Create listing"}
+            {loading ? "updating..." : "update listing"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </div>

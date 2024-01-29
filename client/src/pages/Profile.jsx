@@ -28,8 +28,8 @@ const Profile = () => {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [listingError, setListingError] = useState(false)
-  const [userListings, setUserListings] = useState([])
+  const [listingError, setListingError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
   console.log(formData);
 
@@ -38,7 +38,18 @@ const Profile = () => {
   // allow write:if
   // request.resource.size <2*1024*1024 &&
   // request.resource.contentType.matches('image/.*')
-
+ const listingsRef=useRef(null);
+ useEffect(() => {
+    if (userListings.length > 0 && listingsRef.current) {
+      // Scroll to the listings when they are loaded
+      listingsRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    }
+ }, [userListings])
+ 
   useEffect(() => {
     if (file) {
       handleFile(file);
@@ -127,26 +138,27 @@ const Profile = () => {
       console.log(error);
     }
   };
-  const handleShowListings=async()=>{
+  const handleShowListings = async () => {
     try {
-      setListingError(false)
-      const res=await axiosInstance.get(`/user/listings/${currentUser._id}`)
-      setUserListings(res.data)
+      setListingError(false);
+      const res = await axiosInstance.get(`/user/listings/${currentUser._id}`);
+      setUserListings(res.data);
       console.log(res.data);
     } catch (error) {
-       if (error.response.data.success === false) {
-         setListingError(true);
-         return;
-       }
-       
-      setListingError(true)
-    }
-  }
-  const handleListingDelete=async(listingId)=>{
+      if (error.response.data.success === false) {
+        setListingError(true);
+        return;
+      }
 
+      setListingError(true);
+    }
+  };
+  const handleListingDelete = async (listingId) => {
     try {
-      const res=await axiosInstance.delete(`/listing/delete/${listingId}`)
-      setUserListings((prev)=>prev.filter((listing)=>listing._id !==listingId));
+      const res = await axiosInstance.delete(`/listing/delete/${listingId}`);
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
     } catch (error) {
       if (error.response.data.success === false) {
         console.log(error.response.data.message);
@@ -154,7 +166,7 @@ const Profile = () => {
       }
       console.log(error);
     }
-  }
+  };
   return (
     <>
       <div className="p-3 max-w-lg mx-auto">
@@ -254,35 +266,44 @@ const Profile = () => {
         Show Listings
       </button>
       <p>{listingError ? "Error on listing try to compromice " : ""}</p>
-      {userListings &&
-        userListings.length > 0 &&
-        <div className="flex flex-col gap-4">
-          <h1 className="text-center mt-7 text-2xl font-semibold">Your Listing</h1>
-        {userListings.map((listing) => (
-          <div
-            key={listing._id}
-            className="border gap-4 rounded-lg p-3 flex justify-between items-center"
-          >
-            <Link to={`/listing/${listing._id}`}>
-              <img
-                src={listing.imageUrls[0]}
-                alt="listing cover"
-                className="h-16 w-16 object-contain"
-              />
-            </Link>
-            <Link
-              className="flex-1 text-slate-700 font-semibold  hover:underline truncate"
-              to={`/listing/${listing._id}`}
+      {userListings && userListings.length > 0 && (
+        <div ref={listingsRef} className="flex flex-col gap-4 sm:w-1/2 mx-auto">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            Your Listing
+          </h1>
+          {userListings.map((listing) => (
+            <div
+              key={listing._id}
+              className="border gap-4 rounded-lg p-3 flex justify-between items-center"
             >
-              <p className="">{listing.name} </p>
-            </Link>
-            <div className="flex flex-col items-center">
-              <button onClick={()=>handleListingDelete(listing._id)} className="text-red-700 uppercase">delete</button>
-              <button className="text-green-700 uppercase">edit</button>
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt="listing cover"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link
+                className="flex-1 text-slate-700 font-semibold  hover:underline truncate"
+                to={`/listing/${listing._id}`}
+              >
+                <p className="">{listing.name} </p>
+              </Link>
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={() => handleListingDelete(listing._id)}
+                  className="text-red-700 uppercase"
+                >
+                  delete
+                </button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className="text-green-700 uppercase">edit</button>
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
-        </div> }   
+          ))}
+        </div>
+      )}
     </>
   );
 };
