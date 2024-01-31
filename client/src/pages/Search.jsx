@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+// import ListingItem from "../components/ListingItem";
 import ListingItem from "../components/ListingItem";
+
 import { axiosInstance } from "../axios/requestMethods";
 
 export default function Search() {
