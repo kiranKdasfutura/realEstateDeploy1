@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/api/";
+// const BASE_URL = "http://localhost:3000/api/";
+const BASE_URL = "https://mern-estate5.onrender.com/api/";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
