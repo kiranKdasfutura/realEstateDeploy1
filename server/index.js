@@ -16,8 +16,8 @@ const app = express();
 // Allow cookies and HTTP authentication to be sent
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "DELETE"], // DELETE method is included
+    origin: ["http://localhost:5173", "https://mern-estate5.onrender.com"],
+    methods: ["GET", "POST", "DELETE"],
     credentials: true,
   })
 );
